@@ -163,6 +163,29 @@ def bundle_moves(moves_data):
 
     return bundled_moves
 
+# Function to find bundling combinations for a specific MoveID
+def find_bundling_combinations(moves_data, target_move_id):
+    combinations_found = False
+
+    print(f"Searching for bundling combinations for MoveID: {target_move_id}")
+
+    for move_id in moves_data['MoveID']:
+        if move_id != target_move_id:
+            coord1 = moves_data.loc[moves_data['MoveID'] == target_move_id, ['Latitude', 'Longitude']].iloc[0].tolist()
+            coord2 = moves_data.loc[moves_data['MoveID'] == move_id, ['Latitude', 'Longitude']].iloc[0].tolist()
+            distance = haversine_distance(coord1, coord2)
+
+            if distance <= 3:  # Adjust as needed
+                print(f"Potential bundling combination found with MoveID: {move_id}")
+                combinations_found = True
+
+    if not combinations_found:
+        print("No bundling possibility found for the given MoveID.")
+
+# Example to find bundling combinations for a specific MoveID
+target_move_id = 'ABC123'  # Change to a valid MoveID for testing
+find_bundling_combinations(moves_data, target_move_id)
+
 # Run the bundling algorithm
 bundled_moves = bundle_moves(moves_data)
 
